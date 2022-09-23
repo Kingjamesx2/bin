@@ -1,0 +1,45 @@
+#! /bin/bash
+
+echo "please put two arguments i.e. <root directory name> <identifier>"
+read rootDir identifier
+
+if [ -z "$rootDir" ] && [ -z "$identifier" ]
+then
+	echo "You need to provide two arguments for this script to work."
+	echo "Usage: make-go-dir <root directory name> <identifier>"
+fi
+
+echo "I am about to create a directory structure name "$rootDir" "
+echo "DO you want to continue? [Yes/no]"
+read rep
+
+if [ "$rep" == "Yes" ]
+then 
+	echo "create directory structure..."
+	mkdir "$rootDir"
+	mkdir -p "$rootDir/cmd/api"
+	touch "$rootDir/cmd/api/main.go"
+	mkdir "$rootDir/internals" 
+	mkdir "$rootDir/migrations"
+	mkdir "$rootDir/remote"
+	touch "$rootDir/Makefile"
+	go mod init "$rootDir.$identifier"	
+	echo ' // File: cmd/api/main.go
+	 package main
+
+       import "fmt"
+
+       func main() {
+       fmt.Println("Hello world!")
+	 }' > "$rootDir/cmd/api/main.go"
+	#go mod init "$rootDir.$identifier"
+elif [ "rep" == no ]
+then
+	echo " "
+	echo "Abort"
+	echo " "
+fi
+
+echo "I have created a *main.go* file for you to test the directory structure."
+echo "Type *go run ./cmd/api* at the root directory of your project to test your project."
+echo "Thank You!"
